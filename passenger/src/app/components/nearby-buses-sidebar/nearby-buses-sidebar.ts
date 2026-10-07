@@ -12,6 +12,7 @@ import { IBusItem } from '../../models/bus-models';
 export class NearbyBusesSidebar {
   @Input({ required: true }) buses: IBusItem[] = [];
   @Input() selectedBus: IBusItem | null = null;
+  @Input() isTracking = false;
   @Output() busSelected = new EventEmitter<IBusItem>();
   @Output() settingsRequested = new EventEmitter<void>();
 }

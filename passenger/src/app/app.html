@@ -18,6 +18,7 @@
     <app-nearby-buses-sidebar
       [buses]="buses()"
       [selectedBus]="selectedBus()"
+      [isTracking]="isTrackingActive()"
       (busSelected)="selectBus($event)"
       (settingsRequested)="resetPermission()"
     />
