@@ -1,0 +1,58 @@
+<div
+  class="absolute inset-0 flex items-end lg:items-center justify-center z-40 bg-slate-900/50 backdrop-blur-xs p-0 lg:p-4"
+  role="dialog"
+  aria-modal="true"
+>
+  <div
+    class="w-full lg:w-115 bg-white rounded-t-3xl lg:rounded-3xl shadow-2xl p-6 sm:p-8 flex flex-col max-h-[90vh] overflow-y-auto"
+  >
+    <div class="flex items-center gap-3.5 mb-5">
+      <img
+        src="/images/adust-seal.png"
+        alt="Seal"
+        class="w-12 h-12 rounded-full object-cover border border-slate-200"
+        width="48"
+        height="48"
+      />
+      <div>
+        <h2 class="text-sm font-bold text-slate-900">ADUST Transport</h2>
+        <p class="text-xs text-slate-500 font-medium">Atish Dipankar University</p>
+      </div>
+    </div>
+    <h3 class="text-xl sm:text-2xl font-black text-slate-900 mb-2">Find ADUST buses near you</h3>
+    <p class="text-xs text-slate-600 mb-6 font-medium">Allow location so we can:</p>
+    <ul class="space-y-3.5 mb-6 text-xs font-semibold text-slate-800">
+      <li class="flex items-center gap-3">
+        <span class="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center">📍</span
+        ><span>Show you on the map</span>
+      </li>
+      <li class="flex items-center gap-3">
+        <span class="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center">📋</span
+        ><span>List the closest buses first</span>
+      </li>
+      <li class="flex items-center gap-3">
+        <span class="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center">↔️</span
+        ><span>Show how far away each bus is</span>
+      </li>
+      <li class="flex items-center gap-3">
+        <span class="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center">🧭</span
+        ><span>Keep tracking accurate as you move</span>
+      </li>
+    </ul>
+    <div class="space-y-2.5">
+      <button
+        type="button"
+        (click)="locationRequested.emit()"
+        class="w-full py-3.5 px-6 rounded-2xl bg-[#1c2a4a] hover:bg-[#152038] text-white font-bold text-xs shadow-lg transition-all cursor-pointer"
+      >
+        Allow location</button
+      ><button
+        type="button"
+        (click)="locationRequested.emit()"
+        class="w-full py-2.5 px-6 rounded-2xl text-[#1c2a4a] font-bold text-xs hover:bg-slate-50 transition-all cursor-pointer text-center"
+      >
+        Set my location on the map
+      </button>
+    </div>
+  </div>
+</div>

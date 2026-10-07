@@ -1,0 +1,27 @@
+<div
+  class="absolute inset-0 flex items-center justify-center z-50 bg-slate-900/50 backdrop-blur-xs p-4"
+  role="dialog"
+  aria-modal="true"
+>
+  <div class="w-full sm:w-105 bg-white rounded-3xl shadow-2xl p-6 flex flex-col">
+    <h3 class="text-lg font-bold text-slate-900 mb-2">Call about Bus {{ bus?.id }}?</h3>
+    <p class="text-xs text-slate-600 mb-5 leading-relaxed">
+      You'll be connected to the ADUST Transport Office, which can reach the driver.
+    </p>
+    <div class="space-y-2">
+      <button
+        type="button"
+        (click)="confirmed.emit()"
+        class="w-full py-3 bg-[#1c2a4a] text-white font-bold text-xs rounded-2xl shadow-md transition-all cursor-pointer"
+      >
+        Call Transport Office</button
+      ><button
+        type="button"
+        (click)="cancelled.emit()"
+        class="w-full py-2.5 bg-slate-100 text-slate-700 font-bold text-xs rounded-2xl transition-all cursor-pointer"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

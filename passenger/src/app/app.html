@@ -1,1 +1,47 @@
-<app-passenger-tracking />
+<main
+  class="relative w-screen h-screen overflow-hidden font-sans select-none bg-slate-900 text-slate-800"
+  role="main"
+  aria-label="ADUST Transport Live Bus Tracking"
+>
+  <header class="sr-only">
+    <h1>ADUST Transport - Atish Dipankar University Bus Tracking</h1>
+    <p>
+      Find ADUST buses near you, track bus locations in real-time on OpenStreetMap, and view
+      distance calculations.
+    </p>
+  </header>
+
+  <app-tracking-map [buses]="buses()" (busSelected)="selectBus($event)" />
+
+  @if (isLocationAllowed()) {
+    <app-location-banner (recenterRequested)="recenterMap()" />
+    <app-nearby-buses-sidebar
+      [buses]="buses()"
+      [selectedBus]="selectedBus()"
+      (busSelected)="selectBus($event)"
+      (settingsRequested)="resetPermission()"
+    />
+  }
+
+  @if (selectedBus(); as bus) {
+    <app-bus-details-panel
+      [bus]="bus"
+      [isTracking]="isTrackingActive()"
+      (closed)="closeBusDetails()"
+      (trackingToggled)="toggleTracking()"
+      (callRequested)="isCallModalOpen.set(true)"
+    />
+  }
+
+  @if (!isLocationAllowed()) {
+    <app-location-permission-modal (locationRequested)="allowLocation()" />
+  }
+
+  @if (isCallModalOpen()) {
+    <app-call-confirmation-modal
+      [bus]="selectedBus()"
+      (confirmed)="confirmCall()"
+      (cancelled)="isCallModalOpen.set(false)"
+    />
+  }
+</main>

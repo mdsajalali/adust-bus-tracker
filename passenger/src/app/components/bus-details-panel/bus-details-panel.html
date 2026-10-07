@@ -1,0 +1,117 @@
+<aside
+  class="absolute right-0 top-0 bottom-0 z-30 flex flex-col w-full lg:w-95 bg-white shadow-2xl border-l border-slate-200 transition-all duration-300 ease-out overflow-y-auto"
+  aria-label="Bus details panel"
+>
+  <div
+    class="w-12 h-1.5 bg-slate-300 rounded-full mx-auto my-3 lg:hidden cursor-pointer"
+    aria-hidden="true"
+  ></div>
+  <div
+    class="p-5 pb-4 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white/95 backdrop-blur-md z-10"
+  >
+    <div class="flex items-center gap-2.5">
+      <span class="text-xs font-extrabold text-white bg-slate-900 px-2.5 py-1 rounded-md">{{
+        bus.id
+      }}</span>
+      <div>
+        <h2 class="text-sm font-bold text-slate-900">
+          {{ isTracking ? 'Following ' + bus.name : bus.name }}
+        </h2>
+        <p class="text-[11px] text-slate-500">
+          {{ isTracking ? 'Next stop ' + bus.nextStop + ' · your stop' : bus.route }}
+        </p>
+      </div>
+    </div>
+    <button
+      type="button"
+      (click)="closed.emit()"
+      class="p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors"
+      aria-label="Close"
+    >
+      ✕
+    </button>
+  </div>
+  @if (isTracking) {
+    <div class="p-6 space-y-6 flex flex-col items-center justify-center text-center">
+      <div
+        class="w-20 h-20 rounded-full bg-blue-50 border-4 border-blue-100 flex items-center justify-center text-blue-600 shadow-inner animate-pulse"
+      >
+        📍
+      </div>
+      <div>
+        <h3 class="text-2xl font-black text-slate-900 tracking-tight mb-1">{{ bus.distance }}</h3>
+        <p class="text-xs font-bold text-slate-700">Live tracking bus {{ bus.id }}</p>
+        <p class="text-xs text-slate-500 mt-1">
+          Next stop: <span class="font-bold text-slate-800">{{ bus.nextStop }} (Your stop)</span>
+        </p>
+      </div>
+      <div class="w-full space-y-3 pt-4">
+        <button
+          type="button"
+          (click)="trackingToggled.emit()"
+          class="w-full py-3.5 px-6 rounded-2xl bg-slate-100 hover:bg-slate-200 text-[#1c2a4a] font-bold text-sm shadow-sm transition-all cursor-pointer"
+        >
+          Stop tracking
+        </button>
+      </div>
+    </div>
+  } @else {
+    <div class="p-5 space-y-5">
+      <div
+        class="flex items-center gap-2 text-xs text-emerald-600 font-semibold bg-emerald-50 px-3 py-2 rounded-xl border border-emerald-100"
+      >
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span
+        ><span>Live · Updated 5 sec ago</span>
+      </div>
+      <div class="grid grid-cols-2 gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-200/80">
+        <div>
+          <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-0.5">
+            Distance
+          </p>
+          <p class="text-xl font-black text-slate-900">{{ bus.distance }}</p>
+        </div>
+        <div>
+          <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-0.5">
+            Next stop
+          </p>
+          <p class="text-xs font-bold text-slate-900">{{ bus.nextStop }}</p>
+          <p class="text-[10px] text-blue-600 font-medium">Your stop</p>
+        </div>
+      </div>
+      <button
+        type="button"
+        (click)="trackingToggled.emit()"
+        class="w-full py-3.5 px-6 rounded-2xl bg-[#1c2a4a] hover:bg-[#152038] text-white font-bold text-sm shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
+      >
+        🧭 Track this bus
+      </button>
+      <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
+        <div class="flex items-center gap-3 mb-3">
+          <div
+            class="w-10 h-10 rounded-full bg-slate-200 text-slate-700 font-bold flex items-center justify-center text-xs"
+          >
+            RU
+          </div>
+          <div>
+            <p class="text-xs font-bold text-slate-900">{{ bus.driverName }}</p>
+            <p class="text-[10px] text-slate-500">Driver · {{ bus.driverId }}</p>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            (click)="callRequested.emit()"
+            class="py-2 px-3 bg-white hover:bg-slate-100 text-slate-800 rounded-xl font-semibold text-xs border border-slate-200 flex items-center justify-center gap-2 cursor-pointer"
+          >
+            📞 Call</button
+          ><button
+            type="button"
+            class="py-2 px-3 bg-white hover:bg-slate-100 text-slate-800 rounded-xl font-semibold text-xs border border-slate-200 flex items-center justify-center gap-2 cursor-pointer"
+          >
+            💬 Message
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</aside>
