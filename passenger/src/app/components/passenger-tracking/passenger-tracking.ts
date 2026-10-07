@@ -24,7 +24,7 @@ export class PassengerTracking implements OnInit {
           console.warn('Geolocation fallback:', error.message);
           this.isLocationAllowed.set(true);
         },
-        { enableHighAccuracy: true, timeout: 5000 }
+        { enableHighAccuracy: true }
       );
     } else {
       this.isLocationAllowed.set(true);
