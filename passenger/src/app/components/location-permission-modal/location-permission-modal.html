@@ -1,55 +1,194 @@
 <div
-  class="absolute inset-0 flex items-end lg:items-center justify-center z-40 bg-slate-900/50 backdrop-blur-xs p-0 lg:p-4"
+  class="absolute inset-0 z-40 flex items-end justify-center bg-slate-900/50 p-0 backdrop-blur-xs lg:items-center lg:p-4"
   role="dialog"
   aria-modal="true"
+  aria-labelledby="location-dialog-title"
+  aria-describedby="location-dialog-desc"
 >
   <div
-    class="w-full lg:w-115 bg-white rounded-t-3xl lg:rounded-3xl shadow-2xl p-6 sm:p-8 flex flex-col max-h-[90vh] overflow-y-auto"
+    class="flex max-h-[90vh] w-full flex-col overflow-y-auto rounded-t-3xl bg-white p-6 pt-3 shadow-2xl lg:w-115 lg:rounded-3xl lg:p-8"
   >
-    <div class="flex items-center gap-3.5 mb-5">
+    <!-- Drag handle (mobile only, decorative) -->
+    <div class="mx-auto mb-5 h-1 w-10 rounded-full bg-slate-300 lg:hidden" aria-hidden="true"></div>
+
+    <!-- Brand -->
+    <header class="mb-5 flex items-center gap-3.5 lg:mt-0">
       <img
         src="/images/adust-seal.png"
-        alt="Seal"
-        class="w-12 h-12 rounded-full object-cover border border-slate-200"
+        alt="ADUST seal"
+        class="h-12 w-12 rounded-full border border-slate-200 object-cover"
         width="48"
         height="48"
+        decoding="async"
       />
       <div>
-        <h2 class="text-sm font-bold text-slate-900">ADUST Transport</h2>
-        <p class="text-xs text-slate-500 font-medium">Atish Dipankar University</p>
+        <p class="text-sm font-bold text-slate-900">ADUST Transport</p>
+        <p class="text-xs font-medium text-slate-500">Atish Dipankar University</p>
       </div>
-    </div>
-    <h3 class="text-xl sm:text-2xl font-black text-slate-900 mb-2">Find ADUST buses near you</h3>
-    <p class="text-xs text-slate-600 mb-6 font-medium">Allow location so we can:</p>
-    <ul class="space-y-3.5 mb-6 text-xs font-semibold text-slate-800">
+    </header>
+
+    <h2 id="location-dialog-title" class="mb-2 text-xl font-black text-slate-900 sm:text-2xl">
+      Find ADUST buses near you
+    </h2>
+    <p id="location-dialog-desc" class="mb-5 text-xs font-medium text-slate-600">
+      Allow location so we can:
+    </p>
+
+    <!-- Benefits -->
+    <ul class="mb-5 space-y-3.5 text-xs font-semibold text-slate-800">
       <li class="flex items-center gap-3">
-        <span class="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center">📍</span
-        ><span>Show you on the map</span>
+        <span
+          class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-600"
+          aria-hidden="true"
+        >
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 12 12"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M6.00002 11.3333C8.94554 11.3333 11.3334 8.94551 11.3334 5.99999C11.3334 3.05447 8.94554 0.666656 6.00002 0.666656C3.0545 0.666656 0.666687 3.05447 0.666687 5.99999C0.666687 8.94551 3.0545 11.3333 6.00002 11.3333Z"
+              stroke="#223261"
+              stroke-width="1.33333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+        <span>Show you on the map</span>
       </li>
       <li class="flex items-center gap-3">
-        <span class="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center">📋</span
-        ><span>List the closest buses first</span>
+        <span
+          class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-600"
+          aria-hidden="true"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M2.66669 4H13.3334M2.66669 8H10M2.66669 12H7.33335"
+              stroke="#223261"
+              stroke-width="1.33333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+        <span>List the closest buses first</span>
       </li>
       <li class="flex items-center gap-3">
-        <span class="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center">↔️</span
-        ><span>Show how far away each bus is</span>
+        <span
+          class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-600"
+          aria-hidden="true"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M2 8.00001H14M4.66667 10.6667L2 8.00001L4.66667 5.33334M11.3333 10.6667L14 8.00001L11.3333 5.33334"
+              stroke="#223261"
+              stroke-width="1.33333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+        <span>Show how far away each bus is</span>
       </li>
       <li class="flex items-center gap-3">
-        <span class="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center">🧭</span
-        ><span>Keep tracking accurate as you move</span>
+        <span
+          class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-600"
+          aria-hidden="true"
+        >
+          <!-- Crosshair / tracking -->
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g clip-path="url(#clip0_21_120)">
+              <path
+                d="M8 10C9.10457 10 10 9.10457 10 8C10 6.89543 9.10457 6 8 6C6.89543 6 6 6.89543 6 8C6 9.10457 6.89543 10 8 10Z"
+                stroke="#223261"
+                stroke-width="1.33333"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M8 13C10.7614 13 13 10.7614 13 8C13 5.23858 10.7614 3 8 3C5.23858 3 3 5.23858 3 8C3 10.7614 5.23858 13 8 13Z"
+                stroke="#223261"
+                stroke-width="1.33333"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M7.99998 1.33334V3.33334M7.99998 12.6667V14.6667M1.33331 8.00001H3.33331M12.6666 8.00001H14.6666"
+                stroke="#223261"
+                stroke-width="1.33333"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </g>
+            <defs>
+              <clipPath id="clip0_21_120">
+                <rect width="16" height="16" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+        </span>
+        <span>Keep tracking accurate as you move</span>
       </li>
     </ul>
+
+    <!-- Privacy note -->
+    <div class="mb-5 flex items-start gap-2 border-t border-slate-100 pt-4 text-slate-500">
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 16 16"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M7.99998 2L3.33331 4V7.33333C3.33331 10.3333 5.33331 13 7.99998 14C10.6666 13 12.6666 10.3333 12.6666 7.33333V4L7.99998 2Z"
+          stroke="#6B7390"
+          stroke-width="1.33333"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+
+      <p class="text-[11px] leading-snug font-medium">
+        Your location is used to show nearby buses and calculate distance. It is not stored
+        permanently.
+      </p>
+    </div>
+
+    <!-- Actions -->
     <div class="space-y-2.5">
       <button
         type="button"
         (click)="locationRequested.emit()"
-        class="w-full py-3.5 px-6 rounded-2xl bg-[#1c2a4a] hover:bg-[#152038] text-white font-bold text-xs shadow-lg transition-all cursor-pointer"
+        class="w-full cursor-pointer rounded-xl bg-[#1c2a4a] px-6 py-3.5 text-xs font-bold text-white shadow-lg transition-colors hover:bg-[#152038] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1c2a4a]"
       >
-        Allow location</button
-      ><button
+        Allow location
+      </button>
+      <button
         type="button"
         (click)="locationRequested.emit()"
-        class="w-full py-2.5 px-6 rounded-2xl text-[#1c2a4a] font-bold text-xs hover:bg-slate-50 transition-all cursor-pointer text-center"
+        class="w-full cursor-pointer rounded-xl px-6 py-2.5 text-center text-xs font-bold text-[#1c2a4a] transition-colors hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1c2a4a]"
       >
         Set my location on the map
       </button>
