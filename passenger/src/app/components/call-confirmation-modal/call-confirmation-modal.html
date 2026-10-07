@@ -1,24 +1,94 @@
 <div
-  class="absolute inset-0 flex items-center justify-center z-50 bg-slate-900/50 backdrop-blur-xs p-4"
+  class="absolute inset-0 z-50 flex items-end justify-center bg-slate-900/50 p-0 lg:items-center lg:p-4"
   role="dialog"
   aria-modal="true"
+  aria-labelledby="call-dialog-title"
+  aria-describedby="call-dialog-desc"
 >
-  <div class="w-full sm:w-105 bg-white rounded-3xl shadow-2xl p-6 flex flex-col">
-    <h3 class="text-lg font-bold text-slate-900 mb-2">Call about Bus {{ bus?.id }}?</h3>
-    <p class="text-xs text-slate-600 mb-5 leading-relaxed">
-      You'll be connected to the ADUST Transport Office, which can reach the driver.
+  <div
+    class="flex max-h-[90dvh] w-full flex-col overflow-y-auto rounded-t-3xl bg-white p-5 pt-3 shadow-2xl lg:w-105 lg:rounded-3xl lg:p-6"
+  >
+    <!-- Drag handle (mobile only, decorative) -->
+    <div
+      class="mx-auto mb-4 h-1 w-10 shrink-0 rounded-full bg-slate-300 lg:hidden"
+      aria-hidden="true"
+    ></div>
+
+    <!-- Phone icon badge (desktop only, decorative) -->
+    <div
+      class="mb-4 hidden h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-[#1c2a4a] lg:flex"
+      aria-hidden="true"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        class="h-4 w-4"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path
+          d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"
+        />
+      </svg>
+    </div>
+
+    <h2 id="call-dialog-title" class="mb-2 text-lg font-extrabold text-slate-900 lg:text-xl">
+      Call about Bus {{ bus?.id }}?
+    </h2>
+    <p id="call-dialog-desc" class="mb-5 text-[13px] leading-relaxed text-slate-600">
+      You'll be connected to the ADUST Transport Office, which can reach the driver. The driver may
+      not answer while driving.
     </p>
-    <div class="space-y-2">
+
+    <!-- Driver card -->
+    <div
+      class="mb-5 flex items-center gap-3 rounded-2xl bg-slate-50 p-3.5 lg:border lg:border-slate-100"
+    >
+      <div
+        class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-200 text-[11px] font-bold text-slate-700"
+        aria-hidden="true"
+      >
+        RU
+      </div>
+      <div class="min-w-0">
+        <p class="truncate text-[13px] font-bold text-slate-900">
+          {{ bus?.driverName }} · Bus {{ bus?.driverId }}
+        </p>
+        <p class="truncate text-xs text-slate-500">Through the Transport Office line</p>
+      </div>
+    </div>
+
+    <!-- Actions: mobile = stacked (Call first), desktop = side by side (Cancel left, Call right) -->
+    <div class="flex flex-col gap-2.5 lg:flex-row lg:gap-3">
       <button
         type="button"
         (click)="confirmed.emit()"
-        class="w-full py-3 bg-[#1c2a4a] text-white font-bold text-xs rounded-2xl shadow-md transition-all cursor-pointer"
+        class="order-1 flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#1c2a4a] text-sm font-bold text-white shadow-md transition-colors hover:bg-[#152038] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1c2a4a] lg:order-2 lg:flex-1"
       >
-        Call Transport Office</button
-      ><button
+        <svg
+          viewBox="0 0 24 24"
+          class="h-4 w-4 shrink-0"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path
+            d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"
+          />
+        </svg>
+        <span class="lg:hidden">Call Transport Office</span>
+        <span class="hidden lg:inline">Call now</span>
+      </button>
+
+      <button
         type="button"
         (click)="cancelled.emit()"
-        class="w-full py-2.5 bg-slate-100 text-slate-700 font-bold text-xs rounded-2xl transition-all cursor-pointer"
+        class="order-2 h-12 w-full cursor-pointer rounded-xl bg-slate-100 text-sm font-bold text-slate-700 transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1c2a4a] lg:order-1 lg:flex-1"
       >
         Cancel
       </button>
