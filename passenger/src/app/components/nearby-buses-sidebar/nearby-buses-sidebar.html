@@ -1,72 +1,198 @@
+<!-- Mobile only: floating location card over the map -->
+<section
+  class="absolute inset-x-3 top-3 z-20 flex items-center gap-3 rounded-2xl bg-white p-2.5 shadow-lg ring-1 ring-slate-200/70 lg:hidden"
+  aria-label="Your location"
+>
+  <img
+    src="/images/adust-logo.png"
+    alt="ADUST Transport logo"
+    class="h-9 w-9 shrink-0 rounded-lg object-cover"
+    width="36"
+    height="36"
+    decoding="async"
+  />
+  <span class="h-2.5 w-2.5 shrink-0 rounded-full bg-blue-600" aria-hidden="true"></span>
+  <p class="min-w-0 flex-1 truncate text-sm font-bold text-slate-900">Road 6C, Sector 12</p>
+  <span class="flex items-center gap-1 text-xs font-medium text-slate-500">
+    <svg viewBox="0 0 8 8" class="h-2 w-2" aria-hidden="true">
+      <circle cx="4" cy="4" r="3" fill="none" stroke="currentColor" stroke-width="1.4" />
+    </svg>
+    Demo
+  </span>
+  <button
+    type="button"
+    (click)="settingsRequested.emit()"
+    class="shrink-0 cursor-pointer rounded-full p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1c2a4a]"
+    title="Settings"
+    aria-label="Settings"
+  >
+    <svg
+      viewBox="0 0 24 24"
+      class="h-4 w-4"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path
+        d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+      />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
+  </button>
+</section>
+
+<!-- Bottom sheet (mobile) / left sidebar (desktop) -->
 <aside
-  class="absolute left-0 top-0 bottom-0 z-20 flex flex-col w-full sm:w-80 h-full bg-white/95 lg:bg-slate-50/95 backdrop-blur-2xl border-r border-slate-200/80 shadow-2xl p-5 transition-transform duration-500 ease-in-out translate-x-0"
+  class="absolute inset-x-0 bottom-0 z-20 flex max-h-[70dvh] flex-col rounded-t-3xl bg-white shadow-[0_-8px_30px_rgba(15,23,42,0.12)] lg:top-0 lg:right-auto lg:max-h-none lg:w-80 lg:rounded-none lg:border-r lg:border-slate-200 lg:shadow-2xl"
   aria-label="Nearby Bus Routes Sidebar"
 >
-  <div class="flex items-center justify-between mb-5 pb-4 border-b border-slate-200">
-    <div class="flex items-center gap-3">
+  <!-- Drag handle (mobile, decorative) -->
+  <div
+    class="mx-auto mt-3 mb-3 h-1 w-10 shrink-0 rounded-full bg-slate-300 lg:hidden"
+    aria-hidden="true"
+  ></div>
+
+  <!-- Desktop header -->
+  <header
+    class="hidden shrink-0 items-center justify-between gap-2 border-b border-slate-200 px-5 py-4 lg:flex"
+  >
+    <div class="flex min-w-0 items-center gap-3">
       <img
         src="/images/adust-logo.png"
-        alt="ADUST Logo"
-        class="w-11 h-11 rounded-full shadow-md object-cover bg-slate-900"
-        width="44"
-        height="44"
+        alt="ADUST Transport logo"
+        class="h-10 w-10 shrink-0 rounded-full object-cover"
+        width="40"
+        height="40"
+        decoding="async"
       />
-      <div>
-        <h2 class="text-sm font-bold text-slate-900 leading-tight">ADUST Transport</h2>
-        <p class="text-[11px] text-slate-500 font-medium">Atish Dipankar University</p>
+      <div class="min-w-0">
+        <p class="truncate text-sm font-bold text-slate-900">ADUST Transport</p>
+        <p class="truncate text-[11px] font-medium text-slate-500">Atish Dipankar University</p>
       </div>
     </div>
-    <button
-      type="button"
-      (click)="settingsRequested.emit()"
-      class="p-1.5 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors"
-      title="Settings"
-    >
-      ⚙️
-    </button>
-  </div>
-  <div
-    class="p-3.5 rounded-xl bg-white border border-slate-200/80 shadow-xs mb-5 flex items-center gap-3"
+  </header>
+
+  <!-- Desktop location -->
+  <section
+    class="hidden shrink-0 items-center gap-3 border-b border-slate-200 px-5 py-4 lg:flex"
+    aria-label="Your location"
   >
-    <div class="w-3 h-3 rounded-full bg-blue-600 shadow-sm shrink-0"></div>
+    <span
+      class="h-4 w-4 shrink-0 rounded-full bg-blue-600 ring-4 ring-blue-100 animate-ping"
+      aria-hidden="true"
+    ></span>
     <div>
-      <p class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Your location</p>
-      <p class="text-xs font-bold text-slate-900">Road 6C, Sector 12</p>
+      <p class="text-[11px] font-medium text-slate-500">Your location</p>
+      <p class="text-sm font-bold text-slate-900">Road 6C, Sector 12</p>
     </div>
+  </section>
+
+  <!-- List heading -->
+  <div class="flex shrink-0 items-center justify-between px-5 pb-3 lg:pt-4">
+    <h2 class="text-lg font-extrabold text-slate-900 lg:text-sm lg:font-bold">Nearby buses</h2>
+    <span class="text-xs font-medium text-slate-500">Closest first</span>
   </div>
-  <div class="flex items-center justify-between mb-3">
-    <h3 class="text-xs font-bold text-slate-900">Nearby buses</h3>
-    <span class="text-xs text-slate-500 font-medium">Closest first ▾</span>
-  </div>
-  <div class="space-y-2.5 flex-1 overflow-y-auto pr-1" aria-label="Nearby buses list">
-    @for (bus of buses; track bus.id) {
-      <div
-        (click)="busSelected.emit(bus)"
-        class="p-3.5 rounded-xl bg-white border transition-all cursor-pointer shadow-xs hover:border-blue-400"
-        [class.border-blue-600]="selectedBus?.id === bus.id"
-        [class.ring-2]="selectedBus?.id === bus.id"
-        [class.ring-blue-600/20]="selectedBus?.id === bus.id"
-        [class.border-slate-200]="selectedBus?.id !== bus.id"
-      >
-        <div class="flex items-center justify-between mb-1">
-          <div class="flex items-center gap-2">
-            <span class="text-xs font-extrabold text-white bg-slate-900 px-2 py-0.5 rounded">{{
-              bus.id
-            }}</span
-            ><span class="text-xs font-bold text-slate-900">{{ bus.name }}</span>
-          </div>
-          <span class="text-xs font-bold text-slate-900">{{ bus.distance }}</span>
-        </div>
-        <p class="text-[11px] text-slate-500 truncate mb-2">{{ bus.route }}</p>
-        <div
-          class="flex items-center justify-between text-[10px] text-slate-500 pt-2 border-t border-slate-100"
-        >
-          <span class="flex items-center gap-1 font-medium text-emerald-600"
-            ><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>{{ bus.status }} ·
-            {{ bus.statusText }}</span
-          ><span>🪑 {{ bus.seats }} seats</span>
-        </div>
-      </div>
-    }
+
+  <!-- Bus list -->
+  <div class="flex-1 overflow-y-auto overscroll-contain">
+    <ul class="divide-y divide-slate-100" aria-label="Nearby buses list">
+      @for (bus of buses; track bus.id) {
+        @if (bus.status === 'Offline' && buses[$index - 1]?.status !== 'Offline') {
+          <li class="px-5 pt-5 pb-1 text-xs font-medium text-slate-500">Not in service</li>
+        }
+        <li>
+          <button
+            type="button"
+            (click)="busSelected.emit(bus)"
+            [attr.aria-current]="selectedBus?.id === bus.id ? 'true' : null"
+            class="group grid w-full cursor-pointer grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 border-l-[3px] border-transparent py-3.5 pr-5 pl-4.25 text-left leading-tight transition-colors hover:bg-slate-50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[#1c2a4a] aria-current:border-[#1c2a4a] aria-current:bg-[#eaeef6] aria-current:hover:bg-[#eaeef6]"
+          >
+            @if ($first) {
+              <span
+                class="col-span-2 col-start-2 mb-0.5 text-[10px] font-bold tracking-wider text-slate-500 uppercase lg:hidden"
+              >
+                Nearest to you
+              </span>
+            }
+
+            <!-- Route number -->
+            <span
+              class="col-start-1 flex h-7 w-8 items-center justify-center rounded-md bg-slate-100 text-xs font-bold text-slate-600 group-aria-current:bg-[#1c2a4a] group-aria-current:text-white"
+              >{{ bus.id }}</span
+            >
+
+            <!-- Name + distance -->
+            <span class="col-start-2 truncate text-[15px] font-bold text-slate-900 lg:text-sm">{{
+              bus.name
+            }}</span>
+            @if (bus.distance) {
+              <span
+                class="col-start-3 text-[15px] font-extrabold lg:text-sm"
+                [class]="bus.status === 'Last seen' ? 'text-slate-500' : 'text-slate-900'"
+                >{{ bus.distance }}</span
+              >
+            }
+
+            <!-- Route -->
+            <span class="col-span-2 col-start-2 block truncate text-xs text-slate-500">{{
+              bus.route
+            }}</span>
+
+            <!-- Status -->
+            <span class="col-start-2 flex min-w-0 items-center gap-1.5 text-xs">
+              <span
+                class="h-2 w-2 shrink-0 rounded-full"
+                [class]="
+                  bus.status === 'Live'
+                    ? 'bg-emerald-500'
+                    : bus.status === 'Last seen'
+                      ? 'border-2 border-amber-500'
+                      : 'bg-slate-400'
+                "
+                aria-hidden="true"
+              ></span>
+              <span
+                class="shrink-0 font-semibold"
+                [class]="
+                  bus.status === 'Live'
+                    ? 'text-emerald-600'
+                    : bus.status === 'Last seen'
+                      ? 'text-amber-600'
+                      : 'text-slate-500'
+                "
+                >{{ bus.status }}</span
+              >
+              <span class="truncate text-slate-500">· {{ bus.statusText }}</span>
+            </span>
+
+            <!-- Seats -->
+            <span class="col-start-3 flex items-center gap-1 text-xs text-slate-500">
+              <svg
+                viewBox="0 0 24 24"
+                class="h-3.5 w-3.5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M6 11V7a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v4" />
+                <path d="M4 11h16v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6z" />
+                <path d="M8 19v2M16 19v2" />
+              </svg>
+              {{ bus.seats }} seats
+            </span>
+          </button>
+        </li>
+      }
+    </ul>
+
+    <p class="px-5 py-4 text-xs text-slate-500 lg:hidden">
+      Showing buses within 2 km of you. Distances are straight-line.
+    </p>
   </div>
 </aside>
