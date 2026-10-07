@@ -1,1 +1,373 @@
- 
+<main
+  class="relative w-screen h-screen overflow-hidden font-sans select-none bg-slate-900 text-slate-800"
+  role="main"
+  aria-label="ADUST Transport Live Bus Tracking"
+>
+  <!-- SEO Metadata & Screen Reader Landmark -->
+  <header class="sr-only">
+    <h1>ADUST Transport - Atish Dipankar University Bus Tracking</h1>
+    <p>
+      Find ADUST buses near you, track bus locations in real-time, and view distance calculations.
+    </p>
+  </header>
+
+  <!-- Basemap Background with Live Bus Markers -->
+  <div
+    class="absolute inset-0 bg-cover bg-center transition-transform duration-700 filter brightness-95"
+    style="
+      background-image:
+        url('/images/basemap.png'), linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+    "
+    role="region"
+    aria-label="Interactive Campus Bus Map"
+  >
+    <!-- Simulated live bus markers on the map -->
+    <div
+      class="absolute top-[12%] right-[18%] bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-2xl shadow-xl flex items-center gap-2.5 border border-slate-200 animate-pulse transition-all"
+      aria-hidden="true"
+    >
+      <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></div>
+      <div class="flex flex-col">
+        <span class="text-xs font-bold text-slate-900 leading-tight">Bus 3A</span>
+        <span class="text-[10px] text-slate-500 font-medium">Road 15 • 2 min away</span>
+      </div>
+    </div>
+
+    <div
+      class="absolute bottom-[25%] right-[28%] bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-2xl shadow-xl flex items-center gap-2.5 border border-slate-200 transition-all"
+      aria-hidden="true"
+    >
+      <div class="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-sm shadow-blue-500/50"></div>
+      <div class="flex flex-col">
+        <span class="text-xs font-bold text-slate-900 leading-tight">Bus 5</span>
+        <span class="text-[10px] text-slate-500 font-medium">Sector 12 • Arriving</span>
+      </div>
+    </div>
+
+    <div
+      class="absolute top-[22%] left-[32%] bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-2xl shadow-xl flex items-center gap-2.5 border border-slate-200 transition-all"
+      aria-hidden="true"
+    >
+      <div class="w-2.5 h-2.5 rounded-full bg-indigo-500 shadow-sm shadow-indigo-500/50"></div>
+      <div class="flex flex-col">
+        <span class="text-xs font-bold text-slate-900 leading-tight">Bus 1</span>
+        <span class="text-[10px] text-slate-500 font-medium">Sonargaon • En Route</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Active Application Sidebar (Visible after location is allowed or dismissed) -->
+  <aside
+    class="absolute left-0 top-0 bottom-0 z-20 flex flex-col w-full sm:w-80 h-full bg-white/90 lg:bg-slate-100/90 backdrop-blur-2xl border-r border-slate-200/80 shadow-2xl p-6 transition-all duration-500 ease-in-out"
+    [class.translate-x-0]="isLocationAllowed()"
+    [class.-translate-x-full]="!isLocationAllowed()"
+    aria-label="Bus Routes Sidebar"
+  >
+    <!-- University Branding -->
+    <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-200">
+      <div class="flex items-center gap-3">
+        <img
+          src="/images/adust-logo.png"
+          alt="ADUST Logo"
+          class="w-12 h-12 rounded-full shadow-md object-cover bg-slate-900"
+          width="48"
+          height="48"
+        />
+        <div>
+          <h2 class="text-base font-bold text-slate-900 leading-tight">ADUST Transport</h2>
+          <p class="text-xs text-slate-600 font-medium">Atish Dipankar University</p>
+        </div>
+      </div>
+      <button
+        type="button"
+        (click)="resetModal()"
+        class="p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-200/50 transition-colors"
+        title="Permission settings"
+        aria-label="Reset location permission state"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+          />
+          <circle cx="12" cy="12" r="3" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Live Status & Current Location Card -->
+    <div class="flex items-center justify-between mb-4">
+      <span class="text-xs font-medium text-slate-500">Live Status</span>
+      <span
+        class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200"
+      >
+        <span class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-ping"></span>
+        GPS Active
+      </span>
+    </div>
+
+    <div class="p-4 rounded-xl bg-white/90 border border-slate-200 shadow-sm mb-6">
+      <div class="flex items-start gap-3">
+        <div class="mt-0.5 p-2 bg-blue-600 text-white rounded-full shadow-sm" aria-hidden="true">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+          </svg>
+        </div>
+        <div>
+          <p class="text-xs text-slate-500 font-medium">Your location</p>
+          <p class="text-sm font-bold text-slate-900">Road 6C, Sector 12</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Bus Routes List -->
+    <div class="space-y-3 flex-1 overflow-y-auto pr-1" aria-label="Available Buses">
+      <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Closest Buses</h3>
+
+      <div
+        class="p-3.5 rounded-xl bg-white border border-slate-200/80 shadow-xs hover:border-blue-300 transition-all cursor-pointer"
+      >
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-xs font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded"
+            >Bus 3A</span
+          >
+          <span class="text-xs font-semibold text-emerald-600">2 min (450m)</span>
+        </div>
+        <p class="text-xs text-slate-500">Uttara Express • Road 15</p>
+      </div>
+
+      <div
+        class="p-3.5 rounded-xl bg-white border border-slate-200/80 shadow-xs hover:border-blue-300 transition-all cursor-pointer"
+      >
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-xs font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded"
+            >Bus 5</span
+          >
+          <span class="text-xs font-semibold text-blue-600">5 min (1.2km)</span>
+        </div>
+        <p class="text-xs text-slate-500">Campus Shuttle • Sector 12</p>
+      </div>
+
+      <div
+        class="p-3.5 rounded-xl bg-white border border-slate-200/80 shadow-xs hover:border-blue-300 transition-all cursor-pointer"
+      >
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-xs font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded"
+            >Bus 1</span
+          >
+          <span class="text-xs font-semibold text-indigo-600">12 min (3.4km)</span>
+        </div>
+        <p class="text-xs text-slate-500">City Link • Sonargaon Janapath</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Permission Modal Overlay (Visible Initially) -->
+  <div
+    class="absolute inset-0 flex items-end lg:items-center justify-center z-30 transition-all duration-500"
+    [class.opacity-0]="isLocationAllowed()"
+    [class.pointer-events-none]="isLocationAllowed()"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-title"
+  >
+    <!-- Backdrop overlay -->
+    <div
+      class="absolute inset-0 bg-slate-900/50 backdrop-blur-xs transition-opacity duration-500"
+      (click)="allowLocation()"
+      aria-hidden="true"
+    ></div>
+
+    <!-- Modal Card Body -->
+    <div
+      class="relative w-full lg:w-120 bg-white rounded-t-4xl lg:rounded-3xl shadow-2xl border border-slate-100 p-6 sm:p-8 flex flex-col transition-all duration-500 transform max-h-[90vh] overflow-y-auto focus:outline-none"
+      [class.translate-y-0]="!isLocationAllowed()"
+      [class.translate-y-full]="isLocationAllowed()"
+      tabindex="0"
+      (click)="$event.stopPropagation()"
+    >
+      <!-- Mobile Drag / Swap Handle -->
+      <div
+        class="w-12 h-1.5 bg-slate-300 rounded-full mx-auto mb-5 lg:hidden cursor-pointer hover:bg-slate-400 transition-colors"
+        (click)="allowLocation()"
+        title="Tap to expand view"
+        aria-label="Toggle full screen view"
+        role="button"
+      ></div>
+
+      <!-- University Header inside Modal -->
+      <div class="flex items-center gap-3.5 mb-5">
+        <img
+          src="/images/adust-seal.png"
+          alt="Atish Dipankar University Logo"
+          class="w-14 h-14 rounded-full shadow-md object-cover border-2 border-slate-100"
+          width="56"
+          height="56"
+        />
+        <div>
+          <h2 class="text-base font-bold text-slate-900 tracking-tight">ADUST Transport</h2>
+          <p class="text-xs text-slate-500 font-medium">Atish Dipankar University</p>
+        </div>
+      </div>
+
+      <!-- Modal Title & Subtitle -->
+      <h3
+        id="modal-title"
+        class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mb-2"
+      >
+        Find ADUST buses near you
+      </h3>
+      <p class="text-sm text-slate-600 mb-6 font-medium">Allow location so we can:</p>
+
+      <!-- Feature Checklist with exact icons -->
+      <ul class="space-y-4 mb-6" aria-label="Location permission benefits">
+        <li class="flex items-center gap-3.5 text-slate-800 text-sm font-semibold">
+          <span
+            class="flex items-center justify-center w-9 h-9 rounded-xl bg-slate-100 text-slate-700 shadow-xs shrink-0"
+            aria-hidden="true"
+          >
+            <svg
+              class="w-5 h-5 text-blue-900"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <circle cx="12" cy="12" r="3" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
+              />
+            </svg>
+          </span>
+          <span>Show you on the map</span>
+        </li>
+
+        <li class="flex items-center gap-3.5 text-slate-800 text-sm font-semibold">
+          <span
+            class="flex items-center justify-center w-9 h-9 rounded-xl bg-slate-100 text-slate-700 shadow-xs shrink-0"
+            aria-hidden="true"
+          >
+            <svg
+              class="w-5 h-5 text-blue-900"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h10M4 18h7"
+              />
+            </svg>
+          </span>
+          <span>List the closest buses first</span>
+        </li>
+
+        <li class="flex items-center gap-3.5 text-slate-800 text-sm font-semibold">
+          <span
+            class="flex items-center justify-center w-9 h-9 rounded-xl bg-slate-100 text-slate-700 shadow-xs shrink-0"
+            aria-hidden="true"
+          >
+            <svg
+              class="w-5 h-5 text-blue-900"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
+              />
+            </svg>
+          </span>
+          <span>Show how far away each bus is</span>
+        </li>
+
+        <li class="flex items-center gap-3.5 text-slate-800 text-sm font-semibold">
+          <span
+            class="flex items-center justify-center w-9 h-9 rounded-xl bg-slate-100 text-slate-700 shadow-xs shrink-0"
+            aria-hidden="true"
+          >
+            <svg
+              class="w-5 h-5 text-blue-900"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </span>
+          <span>Keep tracking accurate as you move</span>
+        </li>
+      </ul>
+
+      <!-- Privacy Security Notice -->
+      <div
+        class="pt-4 pb-5 border-t border-slate-100 flex items-start gap-2.5 text-xs text-slate-500 leading-relaxed"
+      >
+        <svg
+          class="w-4 h-4 text-slate-400 mt-0.5 shrink-0"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+          />
+        </svg>
+        <span
+          >Your location is used to show nearby buses and calculate distance. It is not stored
+          permanently.</span
+        >
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="space-y-3 mt-1">
+        <button
+          type="button"
+          (click)="allowLocation()"
+          class="w-full py-3.5 px-6 rounded-2xl bg-[#1c2a4a] hover:bg-[#152038] active:scale-[0.98] text-white font-bold text-sm shadow-lg shadow-slate-900/10 transition-all focus:outline-none focus:ring-4 focus:ring-blue-500/30 cursor-pointer"
+          aria-label="Allow location access"
+        >
+          Allow location
+        </button>
+
+        <button
+          type="button"
+          (click)="allowLocation()"
+          class="w-full py-2.5 px-6 rounded-2xl bg-transparent hover:bg-slate-50 active:scale-[0.98] text-[#1c2a4a] font-bold text-sm transition-all focus:outline-none focus:ring-2 focus:ring-blue-500/20 cursor-pointer text-center"
+          aria-label="Set my location manually on the map"
+        >
+          Set my location on the map
+        </button>
+      </div>
+    </div>
+  </div>
+</main>
