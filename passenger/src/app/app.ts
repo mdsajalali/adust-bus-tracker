@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, signal, ViewChild } from '@angular/core';
 import { TrackingMap } from './components/tracking-map/tracking-map';
 import { LocationBanner } from './components/location-banner/location-banner';
 import { NearbyBusesSidebar } from './components/nearby-buses-sidebar/nearby-buses-sidebar';
@@ -20,10 +20,14 @@ import { IBusItem } from './models/bus-models';
   styleUrl: './app.css',
   templateUrl: './app.html',
 })
-export class App {
+export class App implements AfterViewInit {
   @ViewChild(TrackingMap) private trackingMap?: TrackingMap;
 
-  isLocationAllowed = signal(false);
+  private readonly latitudeCookie = 'adust-lat';
+  private readonly longitudeCookie = 'adust-lng';
+  private readonly savedLocation = this.readSavedLocation();
+
+  isLocationAllowed = signal(this.savedLocation !== null);
   selectedBus = signal<IBusItem | null>(null);
   isCallModalOpen = signal(false);
   isTrackingActive = signal(false);
@@ -61,8 +65,15 @@ export class App {
     }
   ]);
 
+  ngAfterViewInit(): void {
+    if (this.savedLocation) {
+      this.trackingMap?.setUserLocation(this.savedLocation.lat, this.savedLocation.lng);
+    }
+  }
+
   allowLocation(): void {
     const setLocation = (lat: number, lng: number) => {
+      this.saveLocation(lat, lng);
       this.trackingMap?.setUserLocation(lat, lng);
       this.isLocationAllowed.set(true);
     };
@@ -85,6 +96,7 @@ export class App {
   }
 
   resetPermission(): void {
+    this.clearSavedLocation();
     this.isLocationAllowed.set(false);
     this.selectedBus.set(null);
     this.isTrackingActive.set(false);
@@ -110,5 +122,55 @@ export class App {
   confirmCall(): void {
     console.log('Connecting call to transport office...');
     this.isCallModalOpen.set(false);
+  }
+
+  private readSavedLocation(): { lat: number; lng: number } | null {
+    if (typeof document === 'undefined') {
+      return null;
+    }
+
+    const cookies = document.cookie.split(';').reduce<Record<string, string>>((values, cookie) => {
+      const separatorIndex = cookie.indexOf('=');
+      if (separatorIndex === -1) {
+        return values;
+      }
+
+      const name = cookie.slice(0, separatorIndex).trim();
+      values[name] = cookie.slice(separatorIndex + 1).trim();
+      return values;
+    }, {});
+    const savedLatitude = cookies[this.latitudeCookie];
+    const savedLongitude = cookies[this.longitudeCookie];
+
+    if (!savedLatitude || !savedLongitude) {
+      return null;
+    }
+
+    const lat = Number(savedLatitude);
+    const lng = Number(savedLongitude);
+
+    if (
+      !Number.isFinite(lat) ||
+      !Number.isFinite(lng) ||
+      lat < -90 ||
+      lat > 90 ||
+      lng < -180 ||
+      lng > 180
+    ) {
+      return null;
+    }
+
+    return { lat, lng };
+  }
+
+  private saveLocation(lat: number, lng: number): void {
+    const cookieOptions = 'path=/; max-age=31536000; SameSite=Lax';
+    document.cookie = `${this.latitudeCookie}=${encodeURIComponent(lat)}; ${cookieOptions}`;
+    document.cookie = `${this.longitudeCookie}=${encodeURIComponent(lng)}; ${cookieOptions}`;
+  }
+
+  private clearSavedLocation(): void {
+    document.cookie = `${this.latitudeCookie}=; path=/; max-age=0`;
+    document.cookie = `${this.longitudeCookie}=; path=/; max-age=0`;
   }
 }
