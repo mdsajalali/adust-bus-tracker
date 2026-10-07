@@ -1,117 +1,559 @@
-<aside
-  class="absolute right-0 top-0 bottom-0 z-30 flex flex-col w-full lg:w-95 bg-white shadow-2xl border-l border-slate-200 transition-all duration-300 ease-out overflow-y-auto"
-  aria-label="Bus details panel"
->
-  <div
-    class="w-12 h-1.5 bg-slate-300 rounded-full mx-auto my-3 lg:hidden cursor-pointer"
-    aria-hidden="true"
-  ></div>
-  <div
-    class="p-5 pb-4 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white/95 backdrop-blur-md z-10"
+<!-- Mobile only: compact tracking bar (shown while tracking) -->
+@if (isTracking) {
+  <section
+    class="absolute inset-x-0 bottom-0 z-30 rounded-t-3xl bg-white px-4 pt-2 pb-4 shadow-[0_-8px_30px_rgba(15,23,42,0.12)] lg:hidden"
+    aria-label="Live tracking"
+    aria-live="polite"
   >
-    <div class="flex items-center gap-2.5">
-      <span class="text-xs font-extrabold text-white bg-slate-900 px-2.5 py-1 rounded-md">{{
-        bus.id
-      }}</span>
-      <div>
-        <h2 class="text-sm font-bold text-slate-900">
-          {{ isTracking ? 'Following ' + bus.name : bus.name }}
-        </h2>
-        <p class="text-[11px] text-slate-500">
-          {{ isTracking ? 'Next stop ' + bus.nextStop + ' · your stop' : bus.route }}
+    <div class="mx-auto mb-3 h-1 w-10 rounded-full bg-slate-300" aria-hidden="true"></div>
+
+    <div class="flex items-center gap-3">
+      <span
+        class="shrink-0 rounded-md bg-[#1c2a4a] px-2.5 py-1 text-xs font-extrabold text-white"
+        >{{ bus.id }}</span
+      >
+      <div class="min-w-0 flex-1">
+        <h2 class="truncate text-[15px] font-bold text-slate-900">Following {{ bus.name }}</h2>
+        <p class="flex items-center gap-1.5 text-xs text-slate-500">
+          <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500" aria-hidden="true"></span>
+          <span class="truncate">Next stop {{ bus.nextStop }} · your stop</span>
         </p>
       </div>
+      <p class="shrink-0 text-xl font-extrabold text-slate-900">{{ bus.distance }}</p>
     </div>
-    <button
-      type="button"
-      (click)="closed.emit()"
-      class="p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors"
-      aria-label="Close"
-    >
-      ✕
-    </button>
-  </div>
-  @if (isTracking) {
-    <div class="p-6 space-y-6 flex flex-col items-center justify-center text-center">
-      <div
-        class="w-20 h-20 rounded-full bg-blue-50 border-4 border-blue-100 flex items-center justify-center text-blue-600 shadow-inner animate-pulse"
-      >
-        📍
-      </div>
-      <div>
-        <h3 class="text-2xl font-black text-slate-900 tracking-tight mb-1">{{ bus.distance }}</h3>
-        <p class="text-xs font-bold text-slate-700">Live tracking bus {{ bus.id }}</p>
-        <p class="text-xs text-slate-500 mt-1">
-          Next stop: <span class="font-bold text-slate-800">{{ bus.nextStop }} (Your stop)</span>
-        </p>
-      </div>
-      <div class="w-full space-y-3 pt-4">
-        <button
-          type="button"
-          (click)="trackingToggled.emit()"
-          class="w-full py-3.5 px-6 rounded-2xl bg-slate-100 hover:bg-slate-200 text-[#1c2a4a] font-bold text-sm shadow-sm transition-all cursor-pointer"
-        >
-          Stop tracking
-        </button>
-      </div>
-    </div>
-  } @else {
-    <div class="p-5 space-y-5">
-      <div
-        class="flex items-center gap-2 text-xs text-emerald-600 font-semibold bg-emerald-50 px-3 py-2 rounded-xl border border-emerald-100"
-      >
-        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span
-        ><span>Live · Updated 5 sec ago</span>
-      </div>
-      <div class="grid grid-cols-2 gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-200/80">
-        <div>
-          <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-0.5">
-            Distance
-          </p>
-          <p class="text-xl font-black text-slate-900">{{ bus.distance }}</p>
-        </div>
-        <div>
-          <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-0.5">
-            Next stop
-          </p>
-          <p class="text-xs font-bold text-slate-900">{{ bus.nextStop }}</p>
-          <p class="text-[10px] text-blue-600 font-medium">Your stop</p>
-        </div>
-      </div>
+
+    <div class="mt-3 flex items-center gap-2">
       <button
         type="button"
         (click)="trackingToggled.emit()"
-        class="w-full py-3.5 px-6 rounded-2xl bg-[#1c2a4a] hover:bg-[#152038] text-white font-bold text-sm shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
+        class="h-11 flex-1 cursor-pointer rounded-xl bg-slate-100 text-sm font-bold text-[#1c2a4a] transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1c2a4a]"
       >
-        🧭 Track this bus
+        Stop tracking
       </button>
-      <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
-        <div class="flex items-center gap-3 mb-3">
-          <div
-            class="w-10 h-10 rounded-full bg-slate-200 text-slate-700 font-bold flex items-center justify-center text-xs"
-          >
-            RU
-          </div>
-          <div>
-            <p class="text-xs font-bold text-slate-900">{{ bus.driverName }}</p>
-            <p class="text-[10px] text-slate-500">Driver · {{ bus.driverId }}</p>
-          </div>
+      <button
+        type="button"
+        (click)="callRequested.emit()"
+        class="flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-xl bg-slate-100 text-[#1c2a4a] transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1c2a4a]"
+        aria-label="Call driver"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          class="h-4 w-4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path
+            d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"
+          />
+        </svg>
+      </button>
+      <button
+        type="button"
+        class="flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-xl bg-slate-100 text-[#1c2a4a] transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1c2a4a]"
+        aria-label="Message driver"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          class="h-4 w-4"
+          fill="currentColor"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        </svg>
+      </button>
+    </div>
+  </section>
+}
+
+<!-- Bottom sheet (mobile) / right sidebar (desktop) -->
+<aside
+  class="absolute inset-x-0 bottom-0 z-30 flex max-h-[85dvh] flex-col overflow-y-auto overscroll-contain rounded-t-3xl bg-white shadow-[0_-8px_30px_rgba(15,23,42,0.12)] lg:top-0 lg:right-0 lg:left-auto lg:max-h-none lg:w-95 lg:rounded-none lg:border-l lg:border-slate-200 lg:shadow-2xl"
+  [class.max-lg:hidden]="isTracking"
+  aria-label="Bus details panel"
+>
+  <!-- Drag handle (mobile, decorative) -->
+  <div
+    class="mx-auto mt-3 mb-1 h-1 w-10 shrink-0 rounded-full bg-slate-300 lg:hidden"
+    aria-hidden="true"
+  ></div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-10 bg-white px-5 pt-3 pb-4 lg:pt-5">
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-3">
+      <span
+        class="order-1 shrink-0 rounded-md bg-[#1c2a4a] px-2.5 py-1 text-xs font-extrabold text-white"
+        >{{ bus.id }}</span
+      >
+
+      <h2
+        class="order-2 min-w-0 flex-1 truncate text-xl font-extrabold text-slate-900 lg:order-3 lg:basis-full lg:text-2xl"
+      >
+        {{ isTracking ? 'Following ' + bus.name : bus.name }}
+      </h2>
+
+      <button
+        type="button"
+        (click)="closed.emit()"
+        class="order-3 flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-slate-100 text-slate-600 transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1c2a4a] lg:order-2 lg:ml-auto lg:h-8 lg:w-8 lg:bg-transparent lg:text-slate-400 lg:hover:bg-slate-100"
+        aria-label="Close"
+      >
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 18 18"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M13.5 4.5L4.5 13.5M4.5 4.5L13.5 13.5"
+            stroke="#4A5372"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <p class="mt-2 text-sm text-slate-600 lg:mt-1">
+      {{ isTracking ? 'Next stop ' + bus.nextStop + ' · your stop' : bus.route }}
+    </p>
+
+    <p class="mt-1.5 flex items-center gap-1.5 text-xs">
+      <span class="relative flex h-2 w-2" aria-hidden="true">
+        <span
+          class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60 motion-reduce:animate-none"
+        ></span>
+        <span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
+      </span>
+      <span class="font-semibold text-emerald-600">Live</span>
+      <span class="text-slate-500">· Updated 5 sec ago</span>
+    </p>
+  </header>
+
+  <!-- Distance + next stop -->
+  <section class="mx-5 flex items-stretch border-y border-slate-100 py-4" aria-label="Trip summary">
+    <div class="flex-1">
+      <p class="mb-1 text-xs font-medium text-slate-500">Distance</p>
+      <p class="text-2xl leading-none font-extrabold text-slate-900">{{ bus.distance }}</p>
+    </div>
+    <div class="flex-1 border-l border-slate-200 pl-4">
+      <p class="mb-1 text-xs font-medium text-slate-500">Next stop</p>
+      <p class="text-sm leading-tight font-bold text-slate-900">{{ bus.nextStop }}</p>
+      <p class="text-xs font-semibold text-slate-600">Your stop</p>
+    </div>
+  </section>
+
+  <!-- Desktop only: current road -->
+  <p
+    class="mx-5 hidden items-center gap-2 border-b border-slate-100 py-3.5 text-xs text-slate-600 lg:flex"
+  >
+    <svg
+      viewBox="0 0 24 24"
+      class="h-3.5 w-3.5 shrink-0 text-slate-600"
+      fill="currentColor"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M3 11 22 2l-9 19-2-8-8-2z" />
+    </svg>
+    On Sonargaon Janapath, heading to your stop
+  </p>
+
+  <!-- Track / Stop tracking (desktop; on mobile the sheet is hidden while tracking) -->
+  <div class="px-5 pt-4 pb-4">
+    <button
+      type="button"
+      (click)="trackingToggled.emit()"
+      class="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl text-sm font-bold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1c2a4a]"
+      [class]="
+        isTracking
+          ? 'bg-slate-100 text-[#1c2a4a] hover:bg-slate-200'
+          : 'bg-[#1c2a4a] text-white shadow-lg hover:bg-[#152038]'
+      "
+    >
+      @if (isTracking) {
+        <svg
+          width="11"
+          height="11"
+          viewBox="0 0 11 11"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M9.8252 0.825012L0.825195 9.82501M0.825195 0.825012L9.8252 9.82501"
+            stroke="#0F1A3D"
+            stroke-width="1.65"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
+        Stop tracking
+      } @else {
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 18 18"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <g clip-path="url(#clip0_144_1104)">
+            <path
+              d="M9 11.25C10.2426 11.25 11.25 10.2426 11.25 9C11.25 7.75736 10.2426 6.75 9 6.75C7.75736 6.75 6.75 7.75736 6.75 9C6.75 10.2426 7.75736 11.25 9 11.25Z"
+              stroke="white"
+              stroke-width="1.65"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M9 14.625C12.1066 14.625 14.625 12.1066 14.625 9C14.625 5.8934 12.1066 3.375 9 3.375C5.8934 3.375 3.375 5.8934 3.375 9C3.375 12.1066 5.8934 14.625 9 14.625Z"
+              stroke="white"
+              stroke-width="1.65"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M9 1.5V3.75M9 14.25V16.5M1.5 9H3.75M14.25 9H16.5"
+              stroke="white"
+              stroke-width="1.65"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </g>
+          <defs>
+            <clipPath id="clip0_144_1104">
+              <rect width="18" height="18" fill="white" />
+            </clipPath>
+          </defs>
+        </svg>
+
+        Track this bus
+      }
+    </button>
+  </div>
+
+  <!-- Driver -->
+  <section class="border-t border-slate-100 px-5 py-4" aria-label="Driver">
+    <p class="mb-3 text-xs font-medium text-slate-500 lg:block">
+      <span class="hidden lg:inline">Driver</span>
+    </p>
+
+    <div
+      class="grid grid-cols-[1fr_auto_auto] items-center gap-x-2 gap-y-3 lg:grid-cols-2 lg:gap-x-3"
+    >
+      <div class="flex min-w-0 items-center gap-3 lg:col-span-2">
+        <div
+          class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-200 text-xs font-bold text-slate-700"
+          aria-hidden="true"
+        >
+          RU
         </div>
-        <div class="grid grid-cols-2 gap-2">
-          <button
-            type="button"
-            (click)="callRequested.emit()"
-            class="py-2 px-3 bg-white hover:bg-slate-100 text-slate-800 rounded-xl font-semibold text-xs border border-slate-200 flex items-center justify-center gap-2 cursor-pointer"
-          >
-            📞 Call</button
-          ><button
-            type="button"
-            class="py-2 px-3 bg-white hover:bg-slate-100 text-slate-800 rounded-xl font-semibold text-xs border border-slate-200 flex items-center justify-center gap-2 cursor-pointer"
-          >
-            💬 Message
-          </button>
+        <div class="min-w-0">
+          <p class="truncate text-sm font-bold text-slate-900">{{ bus.driverName }}</p>
+          <p class="truncate text-xs text-slate-500">Driver · {{ bus.driverId }}</p>
         </div>
       </div>
+
+      <button
+        type="button"
+        (click)="callRequested.emit()"
+        class="flex h-10 w-10 cursor-pointer items-center justify-center gap-2 rounded-full bg-slate-100 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1c2a4a] lg:w-auto lg:rounded-xl"
+        aria-label="Call driver"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          class="h-4 w-4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path
+            d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"
+          />
+        </svg>
+        <span class="hidden lg:inline">Call</span>
+      </button>
+
+      <button
+        type="button"
+        class="flex h-10 w-10 cursor-pointer items-center justify-center gap-2 rounded-full bg-slate-100 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1c2a4a] lg:w-auto lg:rounded-xl"
+        aria-label="Message driver"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          class="h-4 w-4"
+          fill="currentColor"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        </svg>
+        <span class="hidden lg:inline">WhatsApp</span>
+      </button>
+
+      <p class="col-span-3 text-xs leading-snug text-slate-500 lg:col-span-2">
+        <span class="lg:hidden">Via the Transport Office. May not reply while driving.</span>
+        <span class="hidden lg:inline"
+          >Calls and messages go through the ADUST Transport Office. The driver may not reply while
+          driving.</span
+        >
+      </p>
     </div>
-  }
+  </section>
+
+  <!-- Capacity -->
+  <section
+    class="flex items-center justify-between border-t border-slate-100 px-5 py-4"
+    aria-label="Capacity"
+  >
+    <div>
+      <p class="mb-1 text-xs font-medium text-slate-500">Capacity</p>
+      <p class="text-base font-bold text-slate-900">{{ bus.seats }} seats</p>
+    </div>
+    <svg
+      width="148"
+      height="58"
+      viewBox="0 0 148 58"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M14 2H140C144 2 146 4 146 8V50C146 54 144 56 140 56H14C6 56 2 52 2 44V14C2 6 6 2 14 2Z"
+        fill="white"
+        stroke="#D5DAE5"
+        stroke-width="1.5"
+      />
+      <path
+        d="M10 10C7.33333 22.6667 7.33333 35.3333 10 48"
+        stroke="#D5DAE5"
+        stroke-width="2.5"
+        stroke-linecap="round"
+      />
+      <path
+        d="M26.5 6H22.5C21.1193 6 20 7.11929 20 8.5V12.5C20 13.8807 21.1193 15 22.5 15H26.5C27.8807 15 29 13.8807 29 12.5V8.5C29 7.11929 27.8807 6 26.5 6Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M26.5 17H22.5C21.1193 17 20 18.1193 20 19.5V23.5C20 24.8807 21.1193 26 22.5 26H26.5C27.8807 26 29 24.8807 29 23.5V19.5C29 18.1193 27.8807 17 26.5 17Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M26.5 32H22.5C21.1193 32 20 33.1193 20 34.5V38.5C20 39.8807 21.1193 41 22.5 41H26.5C27.8807 41 29 39.8807 29 38.5V34.5C29 33.1193 27.8807 32 26.5 32Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M26.5 43H22.5C21.1193 43 20 44.1193 20 45.5V49.5C20 50.8807 21.1193 52 22.5 52H26.5C27.8807 52 29 50.8807 29 49.5V45.5C29 44.1193 27.8807 43 26.5 43Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M38.5 6H34.5C33.1193 6 32 7.11929 32 8.5V12.5C32 13.8807 33.1193 15 34.5 15H38.5C39.8807 15 41 13.8807 41 12.5V8.5C41 7.11929 39.8807 6 38.5 6Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M38.5 17H34.5C33.1193 17 32 18.1193 32 19.5V23.5C32 24.8807 33.1193 26 34.5 26H38.5C39.8807 26 41 24.8807 41 23.5V19.5C41 18.1193 39.8807 17 38.5 17Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M38.5 32H34.5C33.1193 32 32 33.1193 32 34.5V38.5C32 39.8807 33.1193 41 34.5 41H38.5C39.8807 41 41 39.8807 41 38.5V34.5C41 33.1193 39.8807 32 38.5 32Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M38.5 43H34.5C33.1193 43 32 44.1193 32 45.5V49.5C32 50.8807 33.1193 52 34.5 52H38.5C39.8807 52 41 50.8807 41 49.5V45.5C41 44.1193 39.8807 43 38.5 43Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M50.5 6H46.5C45.1193 6 44 7.11929 44 8.5V12.5C44 13.8807 45.1193 15 46.5 15H50.5C51.8807 15 53 13.8807 53 12.5V8.5C53 7.11929 51.8807 6 50.5 6Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M50.5 17H46.5C45.1193 17 44 18.1193 44 19.5V23.5C44 24.8807 45.1193 26 46.5 26H50.5C51.8807 26 53 24.8807 53 23.5V19.5C53 18.1193 51.8807 17 50.5 17Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M50.5 32H46.5C45.1193 32 44 33.1193 44 34.5V38.5C44 39.8807 45.1193 41 46.5 41H50.5C51.8807 41 53 39.8807 53 38.5V34.5C53 33.1193 51.8807 32 50.5 32Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M50.5 43H46.5C45.1193 43 44 44.1193 44 45.5V49.5C44 50.8807 45.1193 52 46.5 52H50.5C51.8807 52 53 50.8807 53 49.5V45.5C53 44.1193 51.8807 43 50.5 43Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M62.5 6H58.5C57.1193 6 56 7.11929 56 8.5V12.5C56 13.8807 57.1193 15 58.5 15H62.5C63.8807 15 65 13.8807 65 12.5V8.5C65 7.11929 63.8807 6 62.5 6Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M62.5 17H58.5C57.1193 17 56 18.1193 56 19.5V23.5C56 24.8807 57.1193 26 58.5 26H62.5C63.8807 26 65 24.8807 65 23.5V19.5C65 18.1193 63.8807 17 62.5 17Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M62.5 32H58.5C57.1193 32 56 33.1193 56 34.5V38.5C56 39.8807 57.1193 41 58.5 41H62.5C63.8807 41 65 39.8807 65 38.5V34.5C65 33.1193 63.8807 32 62.5 32Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M62.5 43H58.5C57.1193 43 56 44.1193 56 45.5V49.5C56 50.8807 57.1193 52 58.5 52H62.5C63.8807 52 65 50.8807 65 49.5V45.5C65 44.1193 63.8807 43 62.5 43Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M74.5 6H70.5C69.1193 6 68 7.11929 68 8.5V12.5C68 13.8807 69.1193 15 70.5 15H74.5C75.8807 15 77 13.8807 77 12.5V8.5C77 7.11929 75.8807 6 74.5 6Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M74.5 17H70.5C69.1193 17 68 18.1193 68 19.5V23.5C68 24.8807 69.1193 26 70.5 26H74.5C75.8807 26 77 24.8807 77 23.5V19.5C77 18.1193 75.8807 17 74.5 17Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M74.5 32H70.5C69.1193 32 68 33.1193 68 34.5V38.5C68 39.8807 69.1193 41 70.5 41H74.5C75.8807 41 77 39.8807 77 38.5V34.5C77 33.1193 75.8807 32 74.5 32Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M74.5 43H70.5C69.1193 43 68 44.1193 68 45.5V49.5C68 50.8807 69.1193 52 70.5 52H74.5C75.8807 52 77 50.8807 77 49.5V45.5C77 44.1193 75.8807 43 74.5 43Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M86.5 6H82.5C81.1193 6 80 7.11929 80 8.5V12.5C80 13.8807 81.1193 15 82.5 15H86.5C87.8807 15 89 13.8807 89 12.5V8.5C89 7.11929 87.8807 6 86.5 6Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M86.5 17H82.5C81.1193 17 80 18.1193 80 19.5V23.5C80 24.8807 81.1193 26 82.5 26H86.5C87.8807 26 89 24.8807 89 23.5V19.5C89 18.1193 87.8807 17 86.5 17Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M86.5 32H82.5C81.1193 32 80 33.1193 80 34.5V38.5C80 39.8807 81.1193 41 82.5 41H86.5C87.8807 41 89 39.8807 89 38.5V34.5C89 33.1193 87.8807 32 86.5 32Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M86.5 43H82.5C81.1193 43 80 44.1193 80 45.5V49.5C80 50.8807 81.1193 52 82.5 52H86.5C87.8807 52 89 50.8807 89 49.5V45.5C89 44.1193 87.8807 43 86.5 43Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M98.5 6H94.5C93.1193 6 92 7.11929 92 8.5V12.5C92 13.8807 93.1193 15 94.5 15H98.5C99.8807 15 101 13.8807 101 12.5V8.5C101 7.11929 99.8807 6 98.5 6Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M98.5 17H94.5C93.1193 17 92 18.1193 92 19.5V23.5C92 24.8807 93.1193 26 94.5 26H98.5C99.8807 26 101 24.8807 101 23.5V19.5C101 18.1193 99.8807 17 98.5 17Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M98.5 32H94.5C93.1193 32 92 33.1193 92 34.5V38.5C92 39.8807 93.1193 41 94.5 41H98.5C99.8807 41 101 39.8807 101 38.5V34.5C101 33.1193 99.8807 32 98.5 32Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M98.5 43H94.5C93.1193 43 92 44.1193 92 45.5V49.5C92 50.8807 93.1193 52 94.5 52H98.5C99.8807 52 101 50.8807 101 49.5V45.5C101 44.1193 99.8807 43 98.5 43Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M110.5 6H106.5C105.119 6 104 7.11929 104 8.5V12.5C104 13.8807 105.119 15 106.5 15H110.5C111.881 15 113 13.8807 113 12.5V8.5C113 7.11929 111.881 6 110.5 6Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M110.5 17H106.5C105.119 17 104 18.1193 104 19.5V23.5C104 24.8807 105.119 26 106.5 26H110.5C111.881 26 113 24.8807 113 23.5V19.5C113 18.1193 111.881 17 110.5 17Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M110.5 32H106.5C105.119 32 104 33.1193 104 34.5V38.5C104 39.8807 105.119 41 106.5 41H110.5C111.881 41 113 39.8807 113 38.5V34.5C113 33.1193 111.881 32 110.5 32Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M110.5 43H106.5C105.119 43 104 44.1193 104 45.5V49.5C104 50.8807 105.119 52 106.5 52H110.5C111.881 52 113 50.8807 113 49.5V45.5C113 44.1193 111.881 43 110.5 43Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M122.5 6H118.5C117.119 6 116 7.11929 116 8.5V12.5C116 13.8807 117.119 15 118.5 15H122.5C123.881 15 125 13.8807 125 12.5V8.5C125 7.11929 123.881 6 122.5 6Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M122.5 17H118.5C117.119 17 116 18.1193 116 19.5V23.5C116 24.8807 117.119 26 118.5 26H122.5C123.881 26 125 24.8807 125 23.5V19.5C125 18.1193 123.881 17 122.5 17Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M122.5 32H118.5C117.119 32 116 33.1193 116 34.5V38.5C116 39.8807 117.119 41 118.5 41H122.5C123.881 41 125 39.8807 125 38.5V34.5C125 33.1193 123.881 32 122.5 32Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M122.5 43H118.5C117.119 43 116 44.1193 116 45.5V49.5C116 50.8807 117.119 52 118.5 52H122.5C123.881 52 125 50.8807 125 49.5V45.5C125 44.1193 123.881 43 122.5 43Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M134.5 6H130.5C129.119 6 128 7.11929 128 8.5V12.5C128 13.8807 129.119 15 130.5 15H134.5C135.881 15 137 13.8807 137 12.5V8.5C137 7.11929 135.881 6 134.5 6Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M134.5 17H130.5C129.119 17 128 18.1193 128 19.5V23.5C128 24.8807 129.119 26 130.5 26H134.5C135.881 26 137 24.8807 137 23.5V19.5C137 18.1193 135.881 17 134.5 17Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M134.5 32H130.5C129.119 32 128 33.1193 128 34.5V38.5C128 39.8807 129.119 41 130.5 41H134.5C135.881 41 137 39.8807 137 38.5V34.5C137 33.1193 135.881 32 134.5 32Z"
+        fill="#D9DDE7"
+      />
+      <path
+        d="M134.5 43H130.5C129.119 43 128 44.1193 128 45.5V49.5C128 50.8807 129.119 52 130.5 52H134.5C135.881 52 137 50.8807 137 49.5V45.5C137 44.1193 135.881 43 134.5 43Z"
+        fill="#D9DDE7"
+      />
+    </svg>
+  </section>
+
+  <!-- Route (static preview, same as your screenshots) -->
+  <section class="border-t border-slate-100 px-5 py-4 pb-6" aria-label="Route">
+    <p class="mb-2 text-xs font-medium text-slate-500">Route</p>
+    <ol>
+      <li class="relative flex items-center gap-3 py-2.5 pl-8">
+        <span
+          class="absolute top-1/2 left-[7px] h-full w-0.5 bg-slate-300"
+          aria-hidden="true"
+        ></span>
+        <span
+          class="absolute left-0 z-10 h-4 w-4 rounded-full border-2 border-slate-300 bg-white"
+          aria-hidden="true"
+        ></span>
+        <span class="text-sm text-slate-400">Shah Makhdum Ave</span>
+        <span class="text-xs text-slate-400">Passed</span>
+      </li>
+      <li class="relative flex items-center gap-3 py-2.5 pl-8" aria-current="step">
+        <span
+          class="absolute top-1/2 left-[7px] h-full w-0.5 bg-[#1c2a4a]"
+          aria-hidden="true"
+        ></span>
+        <span
+          class="absolute left-0 z-10 h-4 w-4 rounded-full border-[3px] border-[#1c2a4a] bg-white"
+          aria-hidden="true"
+        ></span>
+        <span class="text-sm font-bold text-slate-900">{{ bus.nextStop }}</span>
+        <span class="text-xs font-bold text-slate-900">Next · your stop</span>
+      </li>
+      <li class="relative flex items-center gap-3 py-2.5 pl-8">
+        <span
+          class="absolute top-1/2 left-[7px] h-full w-0.5 bg-[#1c2a4a]"
+          aria-hidden="true"
+        ></span>
+        <span
+          class="absolute left-0 z-10 h-4 w-4 rounded-full border-2 border-[#1c2a4a] bg-white"
+          aria-hidden="true"
+        ></span>
+        <span class="text-sm text-slate-800">Rupayan City</span>
+      </li>
+      <li class="relative flex items-center gap-3 py-2.5 pl-8">
+        <span
+          class="absolute left-0 z-10 h-4 w-4 rounded-full border-2 border-[#1c2a4a] bg-white"
+          aria-hidden="true"
+        ></span>
+        <span class="text-sm text-slate-800">ADUST Campus</span>
+        <span class="text-xs text-slate-500">Final stop</span>
+      </li>
+    </ol>
+  </section>
 </aside>
